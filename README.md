@@ -16,6 +16,7 @@ João Pedro Meira, David Emanuel, Marcelo Talles, Júlia Mota, Pedro Henrique Ca
 - Comentários nas tarefas
 - Histórico de atividades do projeto
 - Painel com indicadores: tarefas por status, atrasadas e por responsável
+- Filtros no quadro (responsável, prioridade e busca), tema claro e escuro
 
 ## Tecnologias
 
@@ -23,7 +24,7 @@ PHP 8.3+, Laravel 13, MySQL 8, Blade, Tailwind CSS, Alpine.js, Vite.
 
 ## Requisitos
 
-PHP 8.3+, Composer 2, Node 20+, MySQL 8 em execução local.
+PHP 8.3+, Composer 2, Node 20+, MySQL 8 em execução local. No macOS, com Homebrew: `brew install php composer node mysql` e `brew services start mysql`.
 
 ## Instalação
 
@@ -36,7 +37,11 @@ cp .env.example .env
 php artisan key:generate
 ```
 
-Crie o banco (`CREATE DATABASE gestao_projetos CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;`), ajuste `DB_*` no `.env` e execute:
+Crie o banco e popule com os dados de demonstração (o `.env.example` já aponta para `gestao_projetos` com usuário `root` sem senha; ajuste `DB_*` no `.env` se o seu MySQL for diferente):
+
+```bash
+mysql -uroot -e "CREATE DATABASE gestao_projetos CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"
+```
 
 ```bash
 php artisan migrate:fresh --seed
@@ -51,19 +56,24 @@ php artisan serve     # http://localhost:8000
 npm run dev
 ```
 
+Sem `npm run dev`, rode `npm run build` uma vez para gerar os assets em `public/build`.
+
 ## Acesso de demonstração
 
 Criado pelo seeder, somente para ambiente local:
 
 | Usuário | E-mail | Senha |
 |---|---|---|
-| Administrador | admin@demo.test | password |
-| Membro | membro@demo.test | password |
+| Administrador (Ana Ribeiro) | admin@demo.test | password |
+| Membro (Bruno Costa) | membro@demo.test | password |
+
+Também existem `carla@`, `rafael@`, `beatriz@` e `lucas@demo.test`, com a mesma senha. A Ana **não** é membro do projeto "Campanha de Marketing Q4" (`/projects/3`): acessá-lo logado como admin demonstra o bloqueio 403.
 
 ## Testes
 
 ```bash
-php artisan test
+php artisan test        # 58 testes (Pest, SQLite em memória)
+./vendor/bin/pint       # formatação PSR-12
 ```
 
 ## Documentação

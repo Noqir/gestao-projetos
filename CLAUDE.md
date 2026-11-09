@@ -18,20 +18,24 @@
 - `/demo`: prepara o ambiente de demonstração (banco limpo, dados de exemplo, servidor no ar) e valida o roteiro.
 - `/verificar-arquitetura`: compara o código com `docs/ARQUITETURA.md` e lista divergências.
 
-## Mapa do repositório (alvo)
+## Mapa do repositório
+
+Ver a seção 8 de `docs/ARQUITETURA.md` (estrutura real de diretórios). Resumo:
 
 ```
 app/
-  Http/Controllers/     Controllers finos (Project, Task, Comment, Dashboard, Member)
-  Http/Requests/        Validação (StoreProjectRequest, StoreTaskRequest...)
+  Enums/                TaskStatus, TaskPriority, ProjectRole
+  Http/Controllers/     Dashboard, Project, Member, Task, Comment, Activity (finos)
+  Http/Requests/        Validação; authorize() consulta a Policy
   Models/               User, Project, Task, Comment, ActivityLog
   Policies/             ProjectPolicy, TaskPolicy
   Services/             ProjectService, TaskService, DashboardService, ActivityLogger
-database/
-  migrations/           Esquema versionado
-  factories/ seeders/   Dados de demonstração
-resources/views/        Blade (layouts, components, projects, tasks, dashboard)
+  View/Composers/       SidebarComposer
+database/               migrations, factories, seeders (DemoSeeder)
+lang/pt_BR/             Mensagens em português
+resources/views/        layouts, components, dashboard, projects, tasks, errors
+resources/js/app.js     Alpine: tema, avisos e Kanban (SortableJS)
 routes/web.php          Rotas web protegidas por auth
-tests/Feature|Unit/     Testes
+tests/Feature|Unit/     Testes (Pest)
 docs/                   Documentação
 ```

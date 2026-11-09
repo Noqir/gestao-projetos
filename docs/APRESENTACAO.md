@@ -34,7 +34,9 @@ A distribuição das falas é uma sugestão para que os seis integrantes partici
 6. Comentar na tarefa e mostrar o histórico de atividades.
 7. Voltar ao painel e mostrar que os números mudaram.
 8. Opcional para conectar à arquitetura: mostrar a tabela `tasks` no cliente MySQL com o novo status.
-9. Mostrar o bloqueio de acesso: usuário não membro recebe 403.
+9. Mostrar o bloqueio de acesso: usuário não membro recebe 403. Logado como `admin@demo.test`, abrir `http://localhost:8000/projects/3` ("Campanha de Marketing Q4", da qual a Ana não participa).
+
+Observação: o painel conta apenas projetos **ativos**. Como os prazos do seeder são relativos ao dia em que ele roda, execute `migrate:fresh --seed` no dia da apresentação para manter tarefas "atrasadas" e "para amanhã" coerentes.
 
 ## Checklist antes de apresentar
 

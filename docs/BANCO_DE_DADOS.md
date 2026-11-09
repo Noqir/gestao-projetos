@@ -120,7 +120,43 @@ Atribuição em massa é limitada pelo atributo `#[Fillable]` de cada model. Cam
 
 ## Consultas de destaque (para a demonstração)
 
-O painel usa agregações em uma única consulta por indicador: contagem de tarefas por status (`GROUP BY status`), tarefas atrasadas (`due_date < CURDATE() AND status <> 'done'`) e carga por responsável (`JOIN users ... GROUP BY assignee_id`). Executadas via Query Builder em `DashboardService`.
+O painel (`DashboardService`) calcula cada indicador com **uma consulta agregada** executada pelo MySQL, considerando apenas os projetos ativos dos quais o usuário é membro. SQL real gerado pelo Query Builder (os `?` são parâmetros vinculados via PDO):
+
+```sql
+-- Projetos visíveis (escopo Project::visibleTo + active)
+SELECT id FROM projects
+WHERE EXISTS (SELECT * FROM users INNER JOIN project_user ON users.id = project_user.user_id
+              WHERE projects.id = project_user.project_id AND users.id = ?)
+  AND archived = ?;
+
+-- Tarefas por status
+SELECT status, COUNT(*) AS total FROM tasks
+WHERE project_id IN (?, ?) GROUP BY status;
+
+-- Tarefas atrasadas (escopo Task::overdue)
+SELECT COUNT(*) AS aggregate FROM tasks
+WHERE project_id IN (?, ?) AND due_date < ? AND status != ?;
+
+-- Carga por responsável
+SELECT users.id, users.name,
+       SUM(CASE WHEN tasks.status <> ? THEN 1 ELSE 0 END) AS open_tasks,
+       SUM(CASE WHEN tasks.status =  ? THEN 1 ELSE 0 END) AS done_tasks
+FROM tasks INNER JOIN users ON users.id = tasks.assignee_id
+WHERE tasks.project_id IN (?, ?)
+GROUP BY users.id, users.name ORDER BY open_tasks DESC;
+
+-- Progresso por projeto (withCount gera subconsultas correlacionadas)
+SELECT projects.*,
+  (SELECT COUNT(*) FROM tasks WHERE projects.id = tasks.project_id) AS tasks_count,
+  (SELECT COUNT(*) FROM tasks WHERE projects.id = tasks.project_id AND status = ?) AS done_tasks_count
+FROM projects WHERE id IN (?, ?) ORDER BY updated_at DESC LIMIT 5;
+```
+
+Observações para a apresentação:
+
+- A data de "hoje" das tarefas atrasadas é enviada pela aplicação como parâmetro (`due_date < ?`), e não com `CURDATE()`, para respeitar o fuso configurado no Laravel (`America/Sao_Paulo`) e funcionar igual no SQLite dos testes. A coluna é comparada diretamente, sem `DATE(due_date)`, para que o índice `tasks(due_date)` possa ser usado.
+- Atividade recente e "minhas tarefas" usam `with()`, que gera uma consulta extra `WHERE id IN (...)` por relacionamento, em vez de uma consulta por item (sem N+1). O painel inteiro executa cerca de 10 consultas, independentemente do número de tarefas.
+- O teste `DashboardTest` confere que esses números são iguais à contagem real no banco (critério de aceite do RF06).
 
 ## Dados de demonstração
 

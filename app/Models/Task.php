@@ -54,10 +54,13 @@ class Task extends Model
         return $this->hasMany(Comment::class)->oldest();
     }
 
-    /** Prazo vencido e ainda não concluída. */
+    /**
+     * Prazo vencido e ainda não concluída.
+     * Compara a coluna DATE diretamente (sem DATE()) para o MySQL usar o índice tasks(due_date).
+     */
     public function scopeOverdue(Builder $query): Builder
     {
-        return $query->whereDate('due_date', '<', today())->where('status', '!=', TaskStatus::Done);
+        return $query->where('due_date', '<', today()->toDateString())->where('status', '!=', TaskStatus::Done);
     }
 
     /**
