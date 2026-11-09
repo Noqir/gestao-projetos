@@ -48,6 +48,13 @@ class ProfileController extends Controller
 
         $user = $request->user();
 
+        // projects.owner_id usa RESTRICT: avisa antes, em vez de deixar o banco recusar.
+        if ($user->ownedProjects()->exists()) {
+            return back()->withErrors([
+                'password' => 'Você ainda é proprietário de projetos. Exclua-os antes de excluir a conta.',
+            ], 'userDeletion');
+        }
+
         Auth::logout();
 
         $user->delete();

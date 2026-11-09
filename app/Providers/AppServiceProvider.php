@@ -6,9 +6,12 @@ use App\Models\Comment;
 use App\Models\Project;
 use App\Models\Task;
 use App\Models\User;
+use App\View\Composers\SidebarComposer;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -20,6 +23,9 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        // Datas relativas e nomes de meses em português ("há 2 horas", "12 nov").
+        Carbon::setLocale(config('app.locale'));
+
         // activity_logs.subject_type grava "task"/"project" em vez do nome da classe PHP.
         Relation::enforceMorphMap([
             'project' => Project::class,
@@ -27,6 +33,9 @@ class AppServiceProvider extends ServiceProvider
             'comment' => Comment::class,
             'user' => User::class,
         ]);
+
+        // A barra lateral recebe a lista de projetos do usuário (via ProjectService).
+        View::composer('layouts.navigation', SidebarComposer::class);
 
         // Em desenvolvimento, falha cedo em consultas N+1 (lazy loading) e atributos inexistentes.
         Model::shouldBeStrict(! $this->app->isProduction());

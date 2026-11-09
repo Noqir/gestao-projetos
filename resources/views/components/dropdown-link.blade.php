@@ -6,7 +6,7 @@
 @endphp
 
 @if ($as === 'button')
-    <button type="submit" {{ $attributes->merge(['class' => $classes]) }}>
+    <button {{ $attributes->merge(['type' => 'submit', 'class' => $classes]) }}>
         @if ($icon)<x-icon :name="$icon" class="size-4" />@endif
         {{ $slot }}
     </button>
