@@ -21,6 +21,7 @@ export default {
         './resources/views/**/*.blade.php',
         './resources/js/**/*.js',
         './app/Enums/**/*.php',
+        './app/Models/**/*.php',
     ],
 
     theme: {
