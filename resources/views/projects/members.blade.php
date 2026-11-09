@@ -5,7 +5,7 @@
 
     @php $canManage = auth()->user()->can('manageMembers', $project); @endphp
 
-    <div class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_22rem]" x-data="{ removeUrl: '', removeName: '' }">
+    <div class="grid gap-6 xl:grid-cols-[minmax(0,1fr)_22rem]" x-data="{ removeUrl: '', removeName: '' }">
         <x-card :padding="false">
             <x-slot name="title">Equipe do projeto</x-slot>
             <ul class="divide-y divide-line">
@@ -14,18 +14,19 @@
                     <li class="flex items-center gap-4 px-5 py-4 sm:px-6">
                         <x-avatar :user="$member" size="lg" />
                         <div class="min-w-0 flex-1">
-                            <p class="flex items-center gap-2 truncate text-sm font-semibold text-ink">
+                            <p class="truncate text-sm font-semibold text-ink">
                                 {{ $member->name }}
                                 @if ($member->is(auth()->user()))<span class="text-xs font-normal text-ink-subtle">(você)</span>@endif
                             </p>
-                            <p class="truncate text-xs text-ink-muted">{{ $member->email }}</p>
+                            <p class="truncate text-xs text-ink-muted">
+                                {{ $member->email }}
+                                <span class="text-ink-subtle">·</span>
+                                {{ trans_choice('{0} nenhuma tarefa aberta|{1} 1 tarefa aberta|[2,*] :count tarefas abertas', $member->open_tasks_count) }}
+                            </p>
                         </div>
-                        <div class="hidden text-right text-xs text-ink-muted sm:block">
-                            <span class="font-semibold text-ink">{{ $member->open_tasks_count }}</span> tarefa(s) aberta(s)
-                        </div>
-                        <x-badge :color="$role === \App\Enums\ProjectRole::Owner ? 'brand' : 'gray'">{{ $role->label() }}</x-badge>
+                        <x-badge class="shrink-0" :color="$role === \App\Enums\ProjectRole::Owner ? 'brand' : 'gray'">{{ $role->label() }}</x-badge>
                         @if ($canManage && $role !== \App\Enums\ProjectRole::Owner)
-                            <button type="button" class="rounded-lg p-2 text-ink-subtle transition hover:bg-rose-50 hover:text-rose-600 dark:hover:bg-rose-500/10"
+                            <button type="button" class="shrink-0 rounded-lg p-2 text-ink-subtle transition hover:bg-rose-50 hover:text-rose-600 dark:hover:bg-rose-500/10"
                                 title="Remover do projeto" aria-label="Remover {{ $member->name }}"
                                 @click="removeUrl = @js(route('projects.members.destroy', [$project, $member])); removeName = @js($member->name); $dispatch('open-modal', 'remove-member')">
                                 <x-icon name="user-minus" class="size-5" />

@@ -1,6 +1,6 @@
 @props(['users', 'max' => 4, 'size' => 'sm'])
 
-<div {{ $attributes->merge(['class' => 'flex -space-x-2']) }}>
+<div {{ $attributes->merge(['class' => 'flex -space-x-1.5']) }}>
     @foreach ($users->take($max) as $user)
         <x-avatar :user="$user" :size="$size" />
     @endforeach

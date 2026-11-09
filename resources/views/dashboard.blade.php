@@ -22,7 +22,7 @@
         <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
             @foreach ([
                 ['Total de tarefas', $total, 'em projetos ativos', 'board', 'bg-brand-50 text-brand-600 dark:bg-brand-500/15 dark:text-brand-300'],
-                ['Em andamento', $byStatus['doing'] + $byStatus['review'], $byStatus['review'].' em revisão', 'bolt', 'bg-sky-50 text-sky-600 dark:bg-sky-500/15 dark:text-sky-300'],
+                ['Em andamento', $byStatus['doing'], '+ '.$byStatus['review'].' em revisão', 'bolt', 'bg-sky-50 text-sky-600 dark:bg-sky-500/15 dark:text-sky-300'],
                 ['Concluídas', $byStatus['done'], $completion.'% do total', 'check-circle', 'bg-emerald-50 text-emerald-600 dark:bg-emerald-500/15 dark:text-emerald-300'],
                 ['Atrasadas', $overdue, $overdue ? 'precisam de atenção' : 'tudo em dia', 'warning', $overdue ? 'bg-rose-50 text-rose-600 dark:bg-rose-500/15 dark:text-rose-300' : 'bg-surface-muted text-ink-subtle'],
             ] as [$label, $value, $hint, $icon, $tone])

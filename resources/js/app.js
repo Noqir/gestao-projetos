@@ -17,7 +17,11 @@ document.addEventListener('alpine:init', () => {
         dark: document.documentElement.classList.contains('dark'),
         toggle() {
             this.dark = !this.dark;
-            document.documentElement.classList.toggle('dark', this.dark);
+            // Troca instantânea: sem transições de cor durante a mudança de tema.
+            const root = document.documentElement;
+            root.classList.add('theme-switching');
+            root.classList.toggle('dark', this.dark);
+            requestAnimationFrame(() => requestAnimationFrame(() => root.classList.remove('theme-switching')));
             try {
                 localStorage.setItem('theme', this.dark ? 'dark' : 'light');
             } catch (e) {

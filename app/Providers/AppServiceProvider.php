@@ -25,6 +25,8 @@ class AppServiceProvider extends ServiceProvider
     {
         // Datas relativas e nomes de meses em português ("há 2 horas", "12 nov").
         Carbon::setLocale(config('app.locale'));
+        // "agora" em vez de "há 0 segundo"; "ontem"/"anteontem" em vez de "há 1 dia".
+        Carbon::setHumanDiffOptions(Carbon::JUST_NOW | Carbon::ONE_DAY_WORDS | Carbon::TWO_DAY_WORDS);
 
         // activity_logs.subject_type grava "task"/"project" em vez do nome da classe PHP.
         Relation::enforceMorphMap([
