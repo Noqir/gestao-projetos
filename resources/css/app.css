@@ -1,3 +1,86 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/*
+ * Tokens de cor (canais RGB) consumidos pelo tailwind.config.js.
+ * Tema claro em :root e tema escuro em .dark (classe aplicada no <html>).
+ */
+@layer base {
+    :root {
+        --canvas: 246 247 251;
+        --surface: 255 255 255;
+        --surface-muted: 242 244 249;
+        --surface-raised: 255 255 255;
+        --line: 228 231 239;
+        --line-strong: 206 211 224;
+        --ink: 15 23 42;
+        --ink-muted: 82 92 115;
+        --ink-subtle: 128 137 158;
+        color-scheme: light;
+    }
+
+    .dark {
+        --canvas: 10 12 19;
+        --surface: 18 22 33;
+        --surface-muted: 25 30 44;
+        --surface-raised: 30 36 52;
+        --line: 37 43 60;
+        --line-strong: 55 63 86;
+        --ink: 230 233 242;
+        --ink-muted: 162 170 191;
+        --ink-subtle: 116 125 148;
+        color-scheme: dark;
+    }
+
+    html {
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+        @apply bg-canvas text-ink;
+    }
+
+    [x-cloak] {
+        display: none !important;
+    }
+
+    ::selection {
+        @apply bg-brand-500/25;
+    }
+}
+
+@layer components {
+    /* Campos de formulário */
+    .form-input {
+        @apply block w-full rounded-lg border-line-strong bg-surface text-sm text-ink shadow-sm placeholder:text-ink-subtle
+            transition focus:border-brand-500 focus:ring-2 focus:ring-brand-500/25;
+    }
+
+    .form-input[aria-invalid='true'] {
+        @apply border-rose-400 focus:border-rose-500 focus:ring-rose-500/20;
+    }
+
+    .form-label {
+        @apply mb-1.5 block text-sm font-medium text-ink;
+    }
+
+    .form-checkbox {
+        @apply rounded border-line-strong bg-surface text-brand-600 focus:ring-brand-500/30;
+    }
+
+    /* Rolagem horizontal discreta do quadro Kanban */
+    .scrollbar-thin {
+        scrollbar-width: thin;
+        scrollbar-color: rgb(var(--line-strong)) transparent;
+    }
+
+    /* Estados do SortableJS durante o arrastar */
+    .kanban-ghost {
+        @apply opacity-40 ring-2 ring-brand-400;
+    }
+
+    .kanban-drag {
+        @apply rotate-2 shadow-lift;
+    }
+}

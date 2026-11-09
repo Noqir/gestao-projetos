@@ -1,47 +1,46 @@
 <x-guest-layout>
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+    <x-slot name="title">Entrar</x-slot>
 
-    <form method="POST" action="{{ route('login') }}">
+    <div class="mb-8">
+        <h1 class="text-2xl font-semibold tracking-tight">Bem-vindo de volta</h1>
+        <p class="mt-1.5 text-sm text-ink-muted">Entre com seu e-mail e senha para acessar seus projetos.</p>
+    </div>
+
+    <x-auth-session-status class="mb-5" :status="session('status')" />
+
+    <form method="POST" action="{{ route('login') }}" class="space-y-5">
         @csrf
 
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
+        <x-field label="E-mail" for="email">
+            <x-text-input id="email" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" placeholder="voce@empresa.com" />
+        </x-field>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
+        <x-field label="Senha" for="password">
+            <x-text-input id="password" type="password" name="password" required autocomplete="current-password" placeholder="••••••••" />
+        </x-field>
 
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded dark:bg-gray-900 border-gray-300 dark:border-gray-700 text-indigo-600 shadow-sm focus:ring-indigo-500 dark:focus:ring-indigo-600 dark:focus:ring-offset-gray-800" name="remember">
-                <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">{{ __('Remember me') }}</span>
+        <div class="flex items-center justify-between">
+            <label for="remember_me" class="inline-flex items-center gap-2 text-sm text-ink-muted">
+                <input id="remember_me" type="checkbox" class="form-checkbox" name="remember">
+                Manter conectado
             </label>
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
             @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
-                </a>
+                <a class="text-sm font-medium text-brand-600 hover:text-brand-500 dark:text-brand-300" href="{{ route('password.request') }}">Esqueceu a senha?</a>
             @endif
-
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
-            </x-primary-button>
         </div>
+
+        <x-button class="w-full">Entrar</x-button>
     </form>
+
+    <p class="mt-8 text-center text-sm text-ink-muted">
+        Ainda não tem conta?
+        <a href="{{ route('register') }}" class="font-medium text-brand-600 hover:text-brand-500 dark:text-brand-300">Criar conta</a>
+    </p>
+
+    @if (app()->isLocal())
+        <div class="mt-8 rounded-xl border border-dashed border-line-strong bg-surface p-4 text-xs text-ink-muted">
+            <p class="mb-1 flex items-center gap-1.5 font-semibold text-ink"><x-icon name="info" class="size-4 text-brand-500" />Acesso de demonstração</p>
+            <p><span class="font-mono">admin@demo.test</span> ou <span class="font-mono">membro@demo.test</span> · senha <span class="font-mono">password</span></p>
+        </div>
+    @endif
 </x-guest-layout>
