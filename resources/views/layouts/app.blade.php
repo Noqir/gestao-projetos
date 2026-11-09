@@ -33,7 +33,7 @@
                 <x-avatar :user="Auth::user()" size="sm" />
             </header>
 
-            <main class="mx-auto w-full max-w-[90rem] px-4 py-8 sm:px-6 lg:px-10 lg:py-10 animate-fade-in">
+            <main class="mx-auto w-full max-w-[90rem] px-4 py-8 sm:px-6 lg:px-10 lg:py-10">
                 {{ $slot }}
             </main>
         </div>

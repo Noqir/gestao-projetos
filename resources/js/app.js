@@ -65,6 +65,9 @@ document.addEventListener('alpine:init', () => {
                     draggable: '[data-task]',
                     ghostClass: 'kanban-ghost',
                     dragClass: 'kanban-drag',
+                    // Eventos de mouse/toque (não o DnD nativo): mesmo visual em todos os navegadores.
+                    forceFallback: true,
+                    fallbackOnBody: true,
                     delayOnTouchOnly: true,
                     delay: 120,
                     onEnd: (evt) => this.move(evt),

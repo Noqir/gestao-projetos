@@ -47,7 +47,7 @@
                     <x-application-logo class="size-10" />
                     <span class="text-lg font-semibold">Gestão de Projetos</span>
                 </div>
-                <div class="w-full max-w-sm animate-fade-in">
+                <div class="w-full max-w-sm">
                     {{ $slot }}
                 </div>
             </div>
