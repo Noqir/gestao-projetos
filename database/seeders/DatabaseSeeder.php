@@ -11,7 +11,7 @@ class DatabaseSeeder extends Seeder
      * Popula o banco para a demonstração (php artisan migrate:fresh --seed).
      *
      * Só roda com o banco vazio: na hospedagem o seed acontece a cada deploy
-     * (ver railway.json) e não pode duplicar nem apagar dados existentes.
+     * (pré-deploy configurado no Railway) e não pode duplicar nem apagar dados existentes.
      */
     public function run(): void
     {
