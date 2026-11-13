@@ -10,7 +10,7 @@ O ADR 0001 escolheu o Laravel 11. Ao criar o projeto, o Composer recusou instala
 
 ## Decisão
 
-Usar o **Laravel 13** (13.40 na criação do projeto), versão atual e suportada, com Laravel Breeze 2.4 (que declara compatibilidade com 11, 12 e 13). O restante da stack do ADR 0001 permanece: PHP 8.3+, MySQL 8, Blade, Tailwind CSS 3, Alpine.js, Vite, Pest.
+Usar o **Laravel 13** (13.40 na criação do projeto), versão atual e suportada, com Laravel Breeze 2.4 (que declara compatibilidade com 11, 12 e 13). O restante da stack do ADR 0001 permanece, com PHP 8.4+ (as dependências travadas no `composer.lock`, como Symfony 8 e PHPUnit, exigem 8.4), MySQL 8, Blade, Tailwind CSS 3, Alpine.js, Vite, Pest.
 
 ## Alternativas consideradas
 

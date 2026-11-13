@@ -20,11 +20,11 @@ João Pedro Meira, David Emanuel, Marcelo Talles, Júlia Mota, Pedro Henrique Ca
 
 ## Tecnologias
 
-PHP 8.3+, Laravel 13, MySQL 8, Blade, Tailwind CSS, Alpine.js, Vite.
+PHP 8.4+, Laravel 13, MySQL 8, Blade, Tailwind CSS, Alpine.js, Vite.
 
 ## Requisitos
 
-PHP 8.3+, Composer 2, Node 20+, MySQL 8 em execução local. No macOS, com Homebrew: `brew install php composer node mysql` e `brew services start mysql`.
+PHP 8.4+, Composer 2, Node 20+, MySQL 8 em execução local. No macOS, com Homebrew: `brew install php composer node mysql` e `brew services start mysql`.
 
 ## Instalação
 

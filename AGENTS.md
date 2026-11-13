@@ -17,7 +17,7 @@ Apresentação em 13/11/2026 (10 minutos, todos os membros falam). Após 03/12/2
 
 ## Stack
 
-- PHP 8.3+ e Laravel 13 (framework permitido pelo enunciado; ver `docs/adr/0002-laravel-13.md`)
+- PHP 8.4+ e Laravel 13 (framework permitido pelo enunciado; ver `docs/adr/0002-laravel-13.md`)
 - MySQL 8 (banco relacional obrigatório); SQLite em memória apenas para testes
 - Blade + Tailwind CSS + Alpine.js, empacotados com Vite
 - Autenticação: Laravel Breeze (Blade)
