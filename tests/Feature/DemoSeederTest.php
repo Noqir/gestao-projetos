@@ -22,3 +22,11 @@ it('popula o banco para a demonstração', function () {
     $this->actingAs($admin)->get(route('projects.show', Project::firstWhere('name', 'Lançamento do App Mobile')))->assertOk();
     $this->actingAs($admin)->get(route('projects.show', $campaign))->assertForbidden();
 });
+
+it('não duplica os dados quando o banco já está populado', function () {
+    $this->seed();
+    $this->seed();
+
+    expect(User::count())->toBe(6)
+        ->and(Task::count())->toBe(30);
+});
