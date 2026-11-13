@@ -12,7 +12,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // Acesso por túnel (Cloudflare Tunnel): o túnel roda nesta máquina e repassa
+        // HTTPS e o endereço público nos cabeçalhos X-Forwarded-*. Só confiamos nesses
+        // cabeçalhos quando a requisição vem do próprio computador.
+        $middleware->trustProxies(at: ['127.0.0.1', '::1']);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(
