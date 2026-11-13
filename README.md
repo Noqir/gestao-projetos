@@ -60,7 +60,7 @@ Sem `npm run dev`, rode `npm run build` uma vez para gerar os assets em `public/
 
 ## Acesso de demonstração
 
-Criado pelo seeder, somente para ambiente local:
+Criado pelo seeder, tanto no ambiente local quanto na versão online (**https://web-production-28c1a02e.up.railway.app**, ver `docs/ARQUITETURA.md`, seção 9.2):
 
 | Usuário | E-mail | Senha |
 |---|---|---|

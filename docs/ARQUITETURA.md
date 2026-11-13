@@ -158,7 +158,9 @@ Fluxo de dependência permitido: `Controller -> Service -> Model`. Camadas infer
 
 ## 9. Implantação e execução
 
-Local: `php artisan serve` + `npm run dev` + MySQL local. Remota (opcional): PHP-FPM + Nginx, `npm run build`, `php artisan migrate --force`, `php artisan config:cache route:cache`. O enunciado aceita execução local ou remota.
+### 9.1 Local (demonstração principal)
+
+`php artisan serve` + MySQL local (`npm run dev` só para editar o visual). Passo a passo nos guias "Iniciar e parar o sistema" (macOS e Windows).
 
 ```mermaid
 flowchart LR
@@ -166,6 +168,45 @@ flowchart LR
     DEV --> VITE[Vite :5173]
     PHP --> MYSQL[(MySQL :3306)]
 ```
+
+Para mostrar a versão local a alguém de fora sem hospedar, um Cloudflare Tunnel (`cloudflared tunnel --url http://localhost:8000`) gera um endereço `*.trycloudflare.com` temporário. O túnel conecta-se a partir da própria máquina, por isso o padrão de `TRUSTED_PROXIES` é `127.0.0.1,::1` (ver 9.3).
+
+### 9.2 Hospedada (Railway)
+
+Versão online: **https://web-production-28c1a02e.up.railway.app**. O projeto `gestao-projetos` no Railway tem dois serviços na mesma rede privada:
+
+| Serviço | Origem | Papel |
+|---|---|---|
+| `web` | Repositório GitHub `Noqir/gestao-projetos`, branch `main` | Compilado pelo **Railpack** (detecta Laravel): `composer install`, `npm run build`; executa com **FrankenPHP + Caddy** na porta 8080, PHP 8.4. |
+| `MySQL` | Modelo de banco do Railway | MySQL acessível apenas pela rede privada (sem porta pública). |
+
+```mermaid
+flowchart LR
+    U[Navegador] -->|HTTPS| EDGE[Proxy do Railway<br>*.up.railway.app]
+    EDGE -->|HTTP + X-Forwarded-*| WEB[web: FrankenPHP + Laravel]
+    WEB -->|rede privada :3306| DB[(MySQL)]
+```
+
+Ao iniciar cada deploy, o Railpack roda `php artisan migrate --force`, o seed (`db:seed`) e os caches de configuração, rotas e views. O `DatabaseSeeder` só popula o banco quando não há usuários, então os deploys seguintes **não duplicam nem apagam** dados (teste em `tests/Feature/DemoSeederTest.php`).
+
+Variáveis do serviço `web` (o `.env` não vai para o servidor):
+
+| Variável | Valor | Motivo |
+|---|---|---|
+| `APP_ENV` / `APP_DEBUG` | `production` / `false` | Páginas de erro sem detalhes internos; `Model::shouldBeStrict` desligado. |
+| `APP_KEY` | gerada com `php artisan key:generate --show` | Criptografia de sessão e cookies (segredo; fica só no Railway). |
+| `APP_URL` | endereço público | Links gerados em comandos e e-mails. |
+| `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD` | referências `${{MySQL.MYSQLHOST}}` etc. | O Railway injeta as credenciais do serviço MySQL; nenhuma senha fica no código. |
+| `TRUSTED_PROXIES` | `*` | Ver 9.3. |
+| `SESSION_SECURE_COOKIE` | `true` | Cookie de sessão só trafega por HTTPS. |
+| `LOG_CHANNEL` | `stderr` | Logs aparecem no painel do Railway. |
+| `APP_LOCALE`, `APP_TIMEZONE` | `pt_BR`, `America/Sao_Paulo` | Mesmo comportamento da versão local. |
+
+Um novo deploy é disparado pelo painel ou pela CLI (`railway` → *Redeploy*, ou um deploy do último commit da `main`). Em produção, a caixa "Acesso de demonstração" da tela de login não aparece (só em `APP_ENV=local`), mas as contas do seeder existem.
+
+### 9.3 HTTPS atrás de proxy
+
+Tanto o túnel quanto o Railway recebem HTTPS e repassam a requisição ao Laravel por HTTP, informando o protocolo e o endereço originais nos cabeçalhos `X-Forwarded-Proto` e `X-Forwarded-Host`. Sem confiar nesses cabeçalhos, o Laravel geraria links `http://` para CSS, JS e formulários, que o navegador bloqueia numa página HTTPS. Em `bootstrap/app.php`, `trustProxies(at: env('TRUSTED_PROXIES', '127.0.0.1,::1'))` aceita os cabeçalhos só de quem está na lista: a própria máquina por padrão e qualquer origem no Railway, onde o servidor só é alcançável através do proxy da plataforma.
 
 ## 10. Decisões e trade-offs
 

@@ -160,7 +160,7 @@ Observações para a apresentação:
 
 ## Dados de demonstração
 
-`DatabaseSeeder` chama `DemoSeeder`, que cria:
+`DatabaseSeeder` chama `DemoSeeder` apenas quando a tabela `users` está vazia (assim o seed automático de cada deploy no Railway não duplica dados). O `DemoSeeder` cria:
 
 - **6 usuários**, todos com senha `password`: `admin@demo.test` (Ana Ribeiro), `membro@demo.test` (Bruno Costa), além de Carla, Rafael, Beatriz e Lucas (`<nome>@demo.test`).
 - **4 projetos**: "Lançamento do App Mobile" (principal da demonstração, 14 tarefas), "Redesign do Site Institucional" (8), "Campanha de Marketing Q4" (5, **sem** a Ana como membro, para demonstrar o 403) e "Migração de Servidores" (arquivado, 3).
